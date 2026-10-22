@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Часы Восток — магазин наручных часов</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; color: #222; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+
+        /* ШАПКА */
+        header { background: #1a1a2e; color: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .logo { font-size: 1.6rem; font-weight: 700; letter-spacing: 2px; }
+        .logo span { color: #e94560; }
+        nav ul { list-style: none; display: flex; gap: 25px; align-items: center; }
+        nav ul li a { transition: color 0.3s; cursor: pointer; }
+        nav ul li a:hover, nav ul li a.active { color: #e94560; font-weight: bold; }
+        .cart-icon { position: relative; font-size: 1.4rem; cursor: pointer; }
+        .cart-count { position: absolute; top: -8px; right: -12px; background: #e94560; color: #fff; font-size: 0.75rem; font-weight: bold; border-radius: 50%; padding: 2px 6px; }
+
+        /* ВКЛАДКИ */
+        .page-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* КОНТЕНТ */
+        main { max-width: 1100px; margin: 40px auto; padding: 0 20px; min-height: 60vh; }
+        .product-card { display: flex; flex-wrap: wrap; gap: 40px; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .product-image { flex: 1 1 350px; display: flex; justify-content: center; align-items: center; }
+        .product-image img { max-width: 100%; height: auto; border-radius: 12px; transition: transform 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .product-image img:hover { transform: scale(1.03); }
+        .product-info { flex: 1 1 400px; }
+        .product-info h1 { font-size: 2rem; margin-bottom: 10px; color: #1a1a2e; }
+        .brand { display: inline-block; background: #e94560; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; }
+        .price { font-size: 2.2rem; font-weight: 700; color: #e94560; margin: 15px 0; }
+        .old-price { font-size: 1.2rem; color: #999; text-decoration: line-through; margin-left: 10px; }
+        .description { margin: 20px 0; color: #555; }
+
+        /* ТАБЛИЦА */
+        .specs { margin: 25px 0; }
+        .specs table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .specs caption { font-weight: 700; font-size: 1.1rem; text-align: left; margin-bottom: 10px; color: #1a1a2e; }
+        .specs th, .specs td { padding: 10px 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .specs th { color: #1a1a2e; width: 40%; }
+        .specs td { color: #555; }
+
+        /* КНОПКИ */
+        .btn-group { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .btn { padding: 14px 32px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s, transform 0.2s; }
+        .btn-primary { background: #e94560; color: #fff; }
+        .btn-primary:hover { background: #c73650; transform: translateY(-2px); }
+        .btn-secondary { background: transparent; color: #1a1a2e; border: 2px solid #1a1a2e; }
+        .btn-secondary:hover { background: #1a1a2e; color: #fff; }
+
+        /* ЗАГЛУШКИ ДЛЯ ВКЛАДОК */
+        .info-block { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .info-block h2 { color: #1a1a2e; margin-bottom: 20px; border-bottom: 2px solid #e94560; display: inline-block; padding-bottom: 5px; }
+        .info-block p { margin-bottom: 15px; color: #555; }
+
+        /* ОТЗЫВЫ И ФОРМА */
+        .reviews { margin-top: 40px; }
+        .reviews h2 { font-size: 1.6rem; margin-bottom: 20px; color: #1a1a2e; }
+        .review-item { background: #f9f9fc; border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #e94560; }
+        .review-author { font-weight: 700; color: #1a1a2e; }
+        .review-text { color: #555; margin-top: 5px; }
+
+        .feedback { margin-top: 40px; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .feedback h2 { font-size: 1.6rem; margin-bottom: 20px; color: #1a1a2e; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #333; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: inherit; transition: border 0.3s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #e94560; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .success-message { color: #27ae60; font-weight: 600; margin-top: 15px; display: none; }
+
+        /* ПОДВАЛ */
+        footer { background: #1a1a2e; color: #aaa; text-align: center; padding: 30px 20px; margin-top: 60px; font-size: 0.9rem; }
+        footer a { color: #e94560; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 12px; }
+            nav ul { gap: 15px; flex-wrap: wrap; justify-content: center; }
+            .product-card { flex-direction: column; padding: 20px; }
+            .product-info h1 { font-size: 1.5rem; }
+            .price { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Восток<span>Часы</span></div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-target="home">Главная</a></li>
+                <li><a href="#" class="nav-link" data-target="catalog">Каталог</a></li>
+                <li><a href="#" class="nav-link" data-target="about">О нас</a></li>
+                <li><a href="#" class="nav-link" data-target="delivery">Доставка</a></li>
+                <li><a href="#" class="nav-link" data-target="contacts">Контакты</a></li>
+                <li class="cart-icon" id="cartIcon">🛒 <span class="cart-count" id="cartCount">0</span></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ВКЛАДКА 1: ГЛАВНАЯ -->
+        <section id="home" class="page-section active">
+            <article class="product-card">
+                <div class="product-image">
+                    <!-- ВСТАВЛЯЕМ ВАШУ ЛОКАЛЬНУЮ КАРТИНКУ -->
+                    <!-- Файл с картинкой должен называться watch.jpg и лежать в одной папке с index.html -->
+                    <img 
+                        src="watch.jpg" 
+                        alt="Наручные часы Восток"
+                        width="400"
+                    >
+                </div>
+                <div class="product-info">
+                    <span class="brand">Восток</span>
+                    <h1>Наручные часы Восток Классик</h1>
+                    <p class="description">
+                        Классические механические часы с надежным российским механизмом. 
+                        Минеральное стекло, водозащита <strong>100 метров</strong>. 
+                        Идеальный выбор для делового стиля и повседневной носки.
+                    </p>
+                    <div class="price">13 000 ₽ <span class="old-price">15 000 ₽</span></div>
+
+                    <section class="specs">
+                        <table>
+                            <caption>Характеристики</caption>
+                            <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+                            <tbody>
+                                <tr><td>Механизм</td><td>Механический с автоподзаводом</td></tr>
+                                <tr><td>Корпус</td><td>Нержавеющая сталь</td></tr>
+                                <tr><td>Стекло</td><td>Минеральное</td></tr>
+                                <tr><td>Водозащита</td><td>100 м</td></tr>
+                                <tr><td>Гарантия</td><td>2 года</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="addToCartBtn">Добавить в корзину</button>
+                        <button class="btn btn-secondary" id="buyNowBtn">Купить сейчас</button>
+                    </div>
+                </div>
+            </article>
+
+            <section class="reviews">
+                <h2>Отзывы покупателей</h2>
+                <div class="review-item">
+                    <div class="review-author">Алексей М.</div>
+                    <div class="review-text">Отличные часы! Качество сборки на высоте, доставили быстро.</div>
+                </div>
+                <div class="review-item">
+                    <div class="review-author">Екатерина С.</div>
+                    <div class="review-text">Покупала в подарок мужу — он в восторге. Смотрятся дорого.</div>
+                </div>
+            </section>
+
+            <section class="feedback">
+                <h2>Оставить отзыв</h2>
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" name="name" placeholder="Введите имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="example@mail.ru" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">Оценка</label>
+                        <select id="rating" name="rating">
+                            <option value="5">5 — Отлично</option>
+                            <option value="4">4 — Хорошо</option>
+                            <option value="3">3 — Нормально</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" name="message" placeholder="Поделитесь впечатлениями..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                    <div class="success-message" id="successMsg">✅ Спасибо! Ваш отзыв отправлен.</div>
+                </form>
+            </section>
+        </section>
+
+        <!-- ВКЛАДКА 2: КАТАЛОГ -->
+        <section id="catalog" class="page-section">
+            <div class="info-block">
+                <h2>Каталог товаров</h2>
+                <p>В данный момент в нашем магазине представлена только одна модель — <strong>Восток Классик</strong>. Совсем скоро появятся новые поступления!</p>
+                <button class="btn btn-primary" onclick="document.querySelector('[data-target=\'home\']').click()">Вернуться к товару</button>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА 3: О НАС -->
+        <section id="about" class="page-section">
+            <div class="info-block">
+                <h2>О нас</h2>
+                <p>Магазин <em>Восток</em> работает с 2026 года. Мы специализируемся на продаже качественных наручных часов от лучших производителей.</p>
+                <p>Наша миссия — помогать людям подчеркивать свой стиль с помощью идеальных аксессуаров.</p>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА 4: ДОСТАВКА -->
+        <section id="delivery" class="page-section">
+            <div class="info-block">
+                <h2>Условия доставки</h2>
+                <p>🚚 <strong>Курьером по городу:</strong> 300 ₽ (бесплатно при заказе от 10 000 ₽).</p>
+                <p>📦 <strong>Почтой России:</strong> от 250 ₽ (срок 3-7 дней).</p>
+                <p>🏬 <strong>Самовывоз:</strong> бесплатно по адресу г. Новосибирск, ул. Ленина, д. 10.</p>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА 5: КОНТАКТЫ -->
+        <section id="contacts" class="page-section">
+            <div class="info-block">
+                <h2>Свяжитесь с нами</h2>
+                <p>📞 Телефон: +7 (999) 123-45-67</p>
+                <p>✉️ Email: info@vostok-watch.ru</p>
+                <p>📍 Адрес: г. Новосибирск, ул. Ленина, д. 10, офис 5.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Часы Восток. Все права защищены.</p>
+        <p><a href="#">Политика конфиденциальности</a> | <a href="#">Условия использования</a></p>
+    </footer>
+
+    <script>
+        // Логика переключения вкладок
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.page-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Корзина
+        let cartCount = 0;
+        const cartCountEl = document.getElementById('cartCount');
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const buyNowBtn = document.getElementById('buyNowBtn');
+
+        addToCartBtn.addEventListener('click', function() {
+            cartCount++;
+            cartCountEl.textContent = cartCount;
+            cartCountEl.style.transform = 'scale(1.4)';
+            setTimeout(() => { cartCountEl.style.transform = 'scale(1)'; }, 200);
+            alert('Товар «Часы Восток Классик» добавлен в корзину!');
+        });
+
+        buyNowBtn.addEventListener('click', function() {
+            alert('Переход к оформлению заказа...\n(Демонстрационный режим)');
+        });
+
+        // Форма обратной связи
+        const feedbackForm = document.getElementById('feedbackForm');
+        const successMsg = document.getElementById('successMsg');
+
+        feedbackForm.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (name && email && message) {
+                successMsg.style.display = 'block';
+                feedbackForm.reset();
+                setTimeout(() => { successMsg.style.display = 'none'; }, 4000);
+            } else {
+                alert('Пожалуйста, заполните все обязательные поля.');
+            }
+        });
+    </script>
+</body>
+</html>
